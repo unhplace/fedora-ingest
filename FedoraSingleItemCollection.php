@@ -2,7 +2,7 @@
 /**
  * A single item collection class for use with Fedora 4.
  * 
- * @author Rob Wolff <rob.wolff@unh.edu>
+ * @author Rob Wolff
  * @copyright University of New Hampshire Library
  * 
  */

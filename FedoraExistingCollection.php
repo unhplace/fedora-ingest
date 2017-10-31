@@ -2,7 +2,7 @@
 /**
  * Class to add items to an existing collection in Fedora 4.
  * 
- * @author Rob Wolff <rob.wolff@unh.edu>
+ * @author Rob Wolff
  * @copyright University of New Hampshire Library
  * 
  */
