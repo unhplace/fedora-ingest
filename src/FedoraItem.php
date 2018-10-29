@@ -6,7 +6,7 @@
  * @copyright University of New Hampshire Library
  *
  */
-require __DIR__ . '/chullo/vendor/autoload.php';
+require __DIR__ . '/vendor/autoload.php';
 class FedoraItem extends FedoraResource
 {
     protected $files = array(); // pcdm:hasFile
