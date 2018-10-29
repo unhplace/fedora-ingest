@@ -6,7 +6,10 @@
  * @copyright University of New Hampshire Library
  *
  */
+namespace UNHPlace\FedoraIngest;
+
 require __DIR__ . '/vendor/autoload.php';
+
 class FedoraResource
 {
     protected $uri;                // URI of the collection
