@@ -8,8 +8,6 @@
  */
 namespace UNHPlace\FedoraIngest;
 
-require __DIR__ . '/vendor/autoload.php';
-
 class FedoraSingleItemCollection extends FedoraCollection
 {
     /**
