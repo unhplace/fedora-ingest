@@ -1,10 +1,10 @@
 <?php
 /**
  * A single item collection class for use with Fedora 4.
- * 
+ *
  * @author Rob Wolff
  * @copyright University of New Hampshire Library
- * 
+ *
  */
 namespace UNHPlace\FedoraIngest;
 

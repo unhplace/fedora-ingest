@@ -1,7 +1,7 @@
 <?php
 /**
  * Defines an item class for use with Fedora 4.
- * 
+ *
  * @author Rob Wolff
  * @copyright University of New Hampshire Library
  *
@@ -19,11 +19,11 @@ class FedoraItem extends FedoraResource
     /**
      * @param string $uri
      * URI accepted by Fedora.
-     * 
+     *
      * @param string $parent
      * Parent URI.
      */
-    public function __construct( $uri, $parent )
+    public function __construct($uri, $parent)
     {
         parent::__construct();
         $this->uri = $uri;
@@ -35,98 +35,104 @@ class FedoraItem extends FedoraResource
      *
      * @return string
      */
-    public function getProxy() {
+    public function getProxy()
+    {
         return $this->proxy;
     }
 
     /**
      * Creates a proxy for this item.
      */
-    public function addProxy() {
+    public function addProxy()
+    {
         $headers = array( 'Content-Type' => 'text/turtle' );
         $query = '<> rdf:type ore:Proxy .
                   <> ore:proxyFor <' . $this->uri . '> .
                   <> ore:proxyIn <' . $this->parent . '> .' . PHP_EOL;
-        $res = $this->client->createResource( $this->parent, FedoraResource::PREFIX_TURTLE . $query, $headers );
+        $res = $this->client->createResource($this->parent, FedoraResource::PREFIX_TURTLE . $query, $headers);
         $code = $res->getStatusCode();
-        if ( $code >= 200 && $code <= 299 ) {
+        if ($code >= 200 && $code <= 299) {
             $uri = (string) $res->getBody();
             $this->proxy = $uri;
         }
     }
 
     /**
-     * Adds a page to this item. 
-     * 
+     * Adds a page to this item.
+     *
      * @param string $page
      * URI for the page.
      */
-    public function addPage( $page ) {
+    public function addPage($page)
+    {
         $this->pages[] = $page;
 
         // Add pcdm:hasMember
         $updateQuery = 'INSERT DATA { <>
             pcdm:hasMember <' . $page->getUri() . '> }';
-        $this->client->modifyResource( $this->uri, FedoraResource::PREFIX_SPARQL . $updateQuery );
+        $this->client->modifyResource($this->uri, FedoraResource::PREFIX_SPARQL . $updateQuery);
     }
 
     /**
-     * Gets the number of pages in this item. 
-     * 
+     * Gets the number of pages in this item.
+     *
      * @return int
      */
-    public function pageCount() {
-        return count( $this->pages );
+    public function pageCount()
+    {
+        return count($this->pages);
     }
 
     /**
      * Updates a proxy for this item.
-     * 
+     *
      * @param string $prev
      * URI of the previous proxy in order; null indicates this is first.
-     * 
+     *
      * @param string $next
-     * URI of the next proxy in order; null indicates this is last. 
+     * URI of the next proxy in order; null indicates this is last.
      */
-    public function updateProxy( $prev, $next ) {
+    public function updateProxy($prev, $next)
+    {
         $query = 'INSERT DATA { <>' . PHP_EOL;
-        if ( $prev != NULL ) {
+        if ($prev != null) {
             $query .= 'iana:prev <' . $prev . '> ;' . PHP_EOL;
         }
-        if ( $next != NULL ) {
+        if ($next != null) {
             $query .= 'iana:next <' . $next . '> ;' . PHP_EOL;
         }
         // remove trailing newline, semicolon and close
-        $query = substr( $query, 0, -2 ) . '. }';
-        $this->client->modifyResource( $this->proxy, FedoraResource::PREFIX_SPARQL . $query );
+        $query = substr($query, 0, -2) . '. }';
+        $this->client->modifyResource($this->proxy, FedoraResource::PREFIX_SPARQL . $query);
     }
 
     /**
      * Link proxy resources to one another and this item's collection.
      */
-    public function linkProxies() {
+    public function linkProxies()
+    {
         // link item to first and last proxy
         $first = $this->pages[0]->getProxy();
-        $end = end( $this->pages );
+        $end = end($this->pages);
         $last = $end->getProxy();
         $query = 'INSERT DATA { <>
             iana:first <' . $first . '> ;
             iana:last <' . $last . '> . }';
-        $this->client->modifyResource( $this->uri, FedoraResource::PREFIX_SPARQL . $query ); 
+        $this->client->modifyResource($this->uri, FedoraResource::PREFIX_SPARQL . $query);
 
         // link proxies to each other
-        for ( $i=0; $i < count($this->pages); $i++ ) {
-            if ( $i == 0 ) {
-                $prev = NULL;
+        for ($i=0; $i < count($this->pages); $i++) {
+            if ($i == 0) {
+                $prev = null;
                 $next = $this->pages[1]->getProxy();
-            } else if ( $i == count($this->pages)-1 ) {
+            } elseif ($i == count($this->pages)-1) {
                 $prev = $this->pages[$i-1]->getProxy();
-                $next = NULL;
+                $next = null;
             } else {
                 $prev = $this->pages[$i-1]->getProxy();
                 $next = $this->pages[$i+1]->getProxy();
             }
-            $this->pages[$i]->updateProxy( $prev, $next );
+            $this->pages[$i]->updateProxy($prev, $next);
         }
     }
 
@@ -134,30 +140,31 @@ class FedoraItem extends FedoraResource
      * @param string $file
      * File name, including path.
      */
-    public function addFile( $file ) {
-        $data = $this->readFile( $file );
+    public function addFile($file)
+    {
+        $data = $this->readFile($file);
 
         // determine mime type
-        $type = mime_content_type( $file );
+        $type = mime_content_type($file);
 
         // get filename
-        $filename = substr( $file, strrpos( $file, '/' )+1 );
+        $filename = substr($file, strrpos($file, '/')+1);
 
         // add binary resource
         $headers = array(
           'Content-Type' => $type,
           'Content-Disposition' => 'attachment; filename="' . $filename . '"');
-        $resource = $this->client->createResource( $this->uri, $data, $headers );
+        $resource = $this->client->createResource($this->uri, $data, $headers);
         $fileUri = (string) $resource->getBody();
 
         // register file with parent
         $updateQuery = 'INSERT DATA { <> pcdm:hasFile <' . $fileUri . '> . }';
-        $this->client->modifyResource( $this->uri, FedoraResource::PREFIX_SPARQL . $updateQuery );
+        $this->client->modifyResource($this->uri, FedoraResource::PREFIX_SPARQL . $updateQuery);
 
         // add type pcdm:File
         // target should be to /fcr:metadata as base URI represents the binary itself
         $updateQuery = 'INSERT DATA { <> rdf:type pcdm:File . }';
-        $res = $this->client->modifyResource( $fileUri . '/fcr:metadata', FedoraResource::PREFIX_SPARQL . $updateQuery );
+        $res = $this->client->modifyResource($fileUri . '/fcr:metadata', FedoraResource::PREFIX_SPARQL . $updateQuery);
     }
 
     /**
@@ -167,18 +174,19 @@ class FedoraItem extends FedoraResource
      * @return binary
      * File contents.
      */
-    protected function readFile( $file ) {
+    protected function readFile($file)
+    {
         try {
-            $handle = fopen( $file, 'r');
-            if ( !$handle ) {
+            $handle = fopen($file, 'r');
+            if (!$handle) {
                 throw new Exception('File not opened');
             }
-            $data = fread( $handle, filesize( $file ));
-            if ( !$data ) {
+            $data = fread($handle, filesize($file));
+            if (!$data) {
                 throw new Exception('File not read');
             }
-            fclose( $handle );
-        } catch ( Exception $e ) {
+            fclose($handle);
+        } catch (Exception $e) {
             echo 'File ingest failed: ' . $e->getMessage() . ' (' . $file . ')';
         }
         return $data;

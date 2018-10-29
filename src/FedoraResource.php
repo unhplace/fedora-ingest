@@ -1,7 +1,7 @@
 <?php
 /**
  * Defines a generic resource class for use with Fedora 4.
- * 
+ *
  * @author Rob Wolff
  * @copyright University of New Hampshire Library
  *
@@ -102,9 +102,10 @@ class FedoraResource
     /**
      * Simple constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         // Generate a chullo client
-        $this->client = Islandora\Chullo\FedoraApi::create( FedoraResource::BASE_URL );
+        $this->client = Islandora\Chullo\FedoraApi::create(FedoraResource::BASE_URL);
     }
 
     /**
@@ -112,7 +113,8 @@ class FedoraResource
      *
      * @return string
      */
-    public function getUri() {
+    public function getUri()
+    {
         return $this->uri;
     }
 
@@ -121,7 +123,8 @@ class FedoraResource
      *
      * @return array
      */
-    public function getChildren() {
+    public function getChildren()
+    {
         return $this->children;
     }
 
@@ -130,7 +133,8 @@ class FedoraResource
      *
      * @return string
      */
-    public function getParent() {
+    public function getParent()
+    {
         return $this->parent;
     }
 
@@ -139,23 +143,24 @@ class FedoraResource
      *
      * @param array $query
      * Turtle query.
-     * 
+     *
      * @param array $slug
      * Optional slug, which may be rejected by Fedora.
      *
      * @return FedoraItem
      */
-    protected function addChild( $query, $slug = '' ) {
+    protected function addChild($query, $slug = '')
+    {
         $headers = array( 'Content-Type' => 'text/turtle' );
-        if ( $slug != NULL ) {
+        if ($slug != null) {
             $headers['Slug'] = $slug;
         }
-        $res = $this->client->createResource( $this->uri, FedoraResource::PREFIX_TURTLE . $query, $headers );
+        $res = $this->client->createResource($this->uri, FedoraResource::PREFIX_TURTLE . $query, $headers);
         $code = $res->getStatusCode();
-        if ( $code >= 200 && $code <= 299 ) {
+        if ($code >= 200 && $code <= 299) {
             $uri = (string) $res->getBody();
             $this->children[] = $uri;
-            return new FedoraItem( $uri, $this->uri );
+            return new FedoraItem($uri, $this->uri);
         }
     }
 }
