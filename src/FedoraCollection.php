@@ -84,7 +84,7 @@ class FedoraCollection extends FedoraResource
                             // creates an array of values if there are duplicate keys
                             $metadata = array_merge_recursive(array($header[$j] => $csv[$j]), $metadata);
                         } else {
-                            echo '<p><strong>Error</strong>: Invalid field ' . $header[$j] . ' in ' . $this->slug . '</p>';
+                            echo 'Error: Invalid field ' . $header[$j] . ' in ' . $this->slug . '</p>';
                         }
                     }
                 }
