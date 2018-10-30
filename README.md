@@ -1,6 +1,6 @@
 # fedora-ingest
 
-This PHP library automates the ingest of digital collections metadata and binaries into a [Fedora Commons 4](https://duraspace.org/fedora/) instance. 
+This PHP library automates the ingest of digital collections metadata and binaries into a [Fedora Commons 4](https://duraspace.org/fedora/) instance. It is known to work with Fedora 4.7.4. 
 
 The relationships created between objects conform to the [Portland Common Data Model](https://github.com/duraspace/pcdm/wiki).
 
