@@ -177,11 +177,11 @@ class FedoraItem extends FedoraResource
         try {
             $handle = fopen($file, 'r');
             if (!$handle) {
-                throw new Exception('File not opened');
+                throw new \Exception('File not opened');
             }
             $data = fread($handle, filesize($file));
             if (!$data) {
-                throw new Exception('File not read');
+                throw new \Exception('File not read');
             }
             fclose($handle);
         } catch (Exception $e) {

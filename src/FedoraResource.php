@@ -103,7 +103,7 @@ class FedoraResource
     public function __construct()
     {
         // Generate a chullo client
-        $this->client = Islandora\Chullo\FedoraApi::create(FedoraResource::BASE_URL);
+        $this->client = \Islandora\Chullo\FedoraApi::create(FedoraResource::BASE_URL);
     }
 
     /**

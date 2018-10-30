@@ -242,8 +242,8 @@ class FedoraCollection extends FedoraResource
      */
     protected function searchFiles($pattern)
     {
-        $directory = new RecursiveDirectoryIterator($this->binaryPath);
-        $iterator = new RecursiveIteratorIterator($directory);
+        $directory = new \RecursiveDirectoryIterator($this->binaryPath);
+        $iterator = new \RecursiveIteratorIterator($directory);
         $fileList = array();
         foreach ($iterator as $file) {
             // case insensitive
