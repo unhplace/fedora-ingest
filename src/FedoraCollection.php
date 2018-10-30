@@ -109,7 +109,7 @@ class FedoraCollection extends FedoraResource
      * @param string $filename
      * XML file name(s), wildcards allowed.
      */
-    public function ingestXml($filename)
+    public function ingestFgdcXml($filename)
     {
         $this->item = null;
         $this->prevItem = null;
