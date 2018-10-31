@@ -6,10 +6,17 @@ The relationships created between objects conform to the [Portland Common Data M
 
 All code conforms to the PSR-2 (Coding Style) and PSR-4 (Autoloading) standards.
 
+## Install
+
+Via Composer
+
+``` bash
+$ composer require unhplace/fedora-ingest
+```
+
 ## Usage
 
 ``` php
-require '/vendor/autoload.php';
 use UNHPlace\FedoraIngest\FedoraCollection;
 
 // Create a new collection with a named slug
