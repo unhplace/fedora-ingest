@@ -1,0 +1,22 @@
+{
+    "name": "unhplace/fedora-ingest",
+    "description": "Automates ingest of digital collections into Fedora Commons 4.",
+    "homepage": "http://place.unh.edu",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Rob Wolff",
+            "email": "rob@panic.cc",
+            "homepage": "http://panic.cc",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "islandora/chullo": "^0.2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "UNHPlace\\FedoraIngest\\": "src/"
+        }
+    }
+}
